@@ -9,6 +9,9 @@ from dataclasses import dataclass
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import (
+    COHERE_BACKOFF_MAX_SECONDS,
+    COHERE_BACKOFF_INITIAL_SECONDS,
+    COHERE_MAX_RETRIES,
     FLASHRANK_CACHE_DIR,
     FLASHRANK_MAX_LENGTH,
     FLASHRANK_MODEL,
@@ -83,6 +86,42 @@ def _heuristic_rerank(query: str, documents: list[dict], top_k: int) -> list[Rer
             )
         )
     return results
+
+
+def _is_rate_limit_error(exc: Exception) -> bool:
+    status_code = getattr(exc, "status_code", None)
+    if status_code == 429:
+        return True
+
+    response = getattr(exc, "response", None)
+    if response is not None and getattr(response, "status_code", None) == 429:
+        return True
+
+    message = str(exc).lower()
+    return "429" in message or "rate limit" in message or "too many requests" in message
+
+
+def _retry_after_seconds(exc: Exception) -> float | None:
+    headers = getattr(exc, "headers", None)
+    if headers is None:
+        response = getattr(exc, "response", None)
+        headers = getattr(response, "headers", None) if response is not None else None
+
+    if headers:
+        for key in ("retry-after", "Retry-After"):
+            value = headers.get(key) if hasattr(headers, "get") else None
+            if value is None:
+                continue
+            try:
+                return max(0.0, float(value))
+            except (TypeError, ValueError):
+                continue
+
+    message = str(exc)
+    match = re.search(r"retry(?:ing)? after (\d+(?:\.\d+)?)", message, re.IGNORECASE)
+    if match:
+        return max(0.0, float(match.group(1)))
+    return None
 
 
 class FlashrankReranker:
@@ -186,8 +225,17 @@ class FlashrankReranker:
 
 
 class CrossEncoderReranker:
-    def __init__(self, model_name: str = RERANK_MODEL):
+    def __init__(
+        self,
+        model_name: str = RERANK_MODEL,
+        max_retries: int = COHERE_MAX_RETRIES,
+        backoff_initial_seconds: float = COHERE_BACKOFF_INITIAL_SECONDS,
+        backoff_max_seconds: float = COHERE_BACKOFF_MAX_SECONDS,
+    ):
         self.model_name = model_name
+        self.max_retries = max(0, int(max_retries))
+        self.backoff_initial_seconds = max(0.0, float(backoff_initial_seconds))
+        self.backoff_max_seconds = max(self.backoff_initial_seconds, float(backoff_max_seconds))
         self._model = None
         self._fallback = FlashrankReranker()
 
@@ -210,32 +258,55 @@ class CrossEncoderReranker:
 
         try:
             client = self._load_model()
-            docs_for_cohere = [doc.get("text", "") for doc in documents]
-
-            response = client.rerank(
-                model=self.model_name,
-                query=query,
-                documents=docs_for_cohere,
-                top_n=top_k,
-            )
-
-            results = []
-            for i, hit in enumerate(response.results):
-                doc_idx = hit.index
-                original_doc = documents[doc_idx]
-                results.append(
-                    RerankResult(
-                        text=original_doc.get("text", ""),
-                        original_score=float(original_doc.get("score", 0.0)),
-                        rerank_score=float(hit.relevance_score),
-                        metadata=original_doc.get("metadata", {}),
-                        rank=i,
-                    )
-                )
-            return results
         except Exception as exc:
-            logger.warning("Cohere rerank failed; falling back to Flashrank/heuristic reranker: %s", exc)
+            logger.warning("Cohere client failed to load; falling back to Flashrank/heuristic reranker: %s", exc)
             return self._fallback.rerank(query, documents, top_k)
+
+        docs_for_cohere = [doc.get("text", "") for doc in documents]
+
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = client.rerank(
+                    model=self.model_name,
+                    query=query,
+                    documents=docs_for_cohere,
+                    top_n=top_k,
+                )
+
+                results = []
+                for i, hit in enumerate(response.results):
+                    doc_idx = hit.index
+                    original_doc = documents[doc_idx]
+                    results.append(
+                        RerankResult(
+                            text=original_doc.get("text", ""),
+                            original_score=float(original_doc.get("score", 0.0)),
+                            rerank_score=float(hit.relevance_score),
+                            metadata=original_doc.get("metadata", {}),
+                            rank=i,
+                        )
+                    )
+                return results
+            except Exception as exc:
+                if _is_rate_limit_error(exc) and attempt < self.max_retries:
+                    retry_after = _retry_after_seconds(exc)
+                    if retry_after is None:
+                        retry_after = min(
+                            self.backoff_max_seconds,
+                            self.backoff_initial_seconds * (2**attempt if attempt > 0 else 1.0),
+                        )
+                    logger.warning(
+                        "Cohere rate limited (attempt %s/%s); retrying in %.1fs: %s",
+                        attempt + 1,
+                        self.max_retries + 1,
+                        retry_after,
+                        exc,
+                    )
+                    time.sleep(retry_after)
+                    continue
+
+                logger.warning("Cohere rerank failed; falling back to Flashrank/heuristic reranker: %s", exc)
+                return self._fallback.rerank(query, documents, top_k)
 
 
 def benchmark_reranker(reranker, query: str, documents: list[dict], n_runs: int = 5) -> dict:
