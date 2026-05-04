@@ -31,15 +31,15 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV '/Users/AI/Vinuni/Day18-Track3-Production-RAG/.venv'
+setenv VIRTUAL_ENV '/home/cuong/Desktop/python/VinUni/D18/Day18-Track3-Production-RAG/.venv'
 
 set _OLD_VIRTUAL_PATH="$PATH:q"
 setenv PATH "$VIRTUAL_ENV:q/bin:$PATH:q"
 
 
 
-if ('lab18-production-rag' != "") then
-    setenv VIRTUAL_ENV_PROMPT 'lab18-production-rag'
+if ('day18-track3-production-rag' != "") then
+    setenv VIRTUAL_ENV_PROMPT 'day18-track3-production-rag'
 else
     setenv VIRTUAL_ENV_PROMPT "$VIRTUAL_ENV:t:q"
 endif

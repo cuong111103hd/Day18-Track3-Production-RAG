@@ -1,0 +1,91 @@
+{
+  "aggregate": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.32725042240649754,
+    "context_precision": 0.5394593408932626,
+    "context_recall": 1.0
+  },
+  "num_questions": 20,
+  "failures": [
+    {
+      "question": "Bảo hành laptop công ty là khoảng thời gian nào?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.23076923076923078,
+      "average_score": 0.6672161172161172,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Ai được cấp quyền admin trên hệ thống?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.291156462585034,
+      "average_score": 0.6850645647480549,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Lương trong 30 ngày đầu khi ốm đau là bao nhiêu?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.2522343594836147,
+      "average_score": 0.691735060459139,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Mật khẩu phải được thay đổi bao lâu một lần?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.30632630410654826,
+      "average_score": 0.6943000226285788,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Dung lượng tối đa inbox là bao nhiêu GB?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.3346153846153846,
+      "average_score": 0.7007967032967033,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Độ dài mật khẩu tối thiểu là bao nhiêu ký tự?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.34288824383164007,
+      "average_score": 0.70572206095791,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Công ty hỗ trợ bao nhiêu tiền cho cơm trưa?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.32908163265306123,
+      "average_score": 0.7061739169351952,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Những nhân viên làm việc từ xa bắt buộc phải dùng gì?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.36243386243386244,
+      "average_score": 0.7121362433862434,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Nhân viên được khám sức khỏe định kỳ bao lâu một lần?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.3283214871514489,
+      "average_score": 0.7142047241194684,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    },
+    {
+      "question": "Thưởng năm bằng bao nhiêu tháng lương cơ bản?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.2546153846153846,
+      "average_score": 0.7149413998019148,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template and generation constraints"
+    }
+  ]
+}

@@ -78,7 +78,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='/Users/AI/Vinuni/Day18-Track3-Production-RAG/.venv'
+VIRTUAL_ENV='/home/cuong/Desktop/python/VinUni/D18/Day18-Track3-Production-RAG/.venv'
 if ([ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]) && $(command -v cygpath &> /dev/null) ; then
     VIRTUAL_ENV=$(cygpath -u "$VIRTUAL_ENV")
 fi
@@ -98,8 +98,8 @@ _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
 
-if [ "xlab18-production-rag" != x ] ; then
-    VIRTUAL_ENV_PROMPT="lab18-production-rag"
+if [ "xday18-track3-production-rag" != x ] ; then
+    VIRTUAL_ENV_PROMPT="day18-track3-production-rag"
 else
     VIRTUAL_ENV_PROMPT=$(basename "$VIRTUAL_ENV")
 fi
