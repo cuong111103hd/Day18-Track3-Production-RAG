@@ -1,0 +1,37 @@
+# Lab 18: Production RAG Pipeline
+# Python 3.10+
+
+# Core Dependencies
+python-dotenv==1.0.0
+numpy==1.24.3
+pandas==2.0.3
+
+# NLP & Embedding
+sentence-transformers==2.2.2
+transformers==4.35.2
+torch==2.0.1
+underthesea==6.9.5
+
+# Search & Ranking
+rank-bm25==0.2.2
+FlagEmbedding==1.2.12
+
+# Vector Database
+qdrant-client==2.7.0
+
+# LLM & Evaluation
+openai==1.11.0
+ragas==0.1.7
+datasets==2.14.6
+cohere==4.46
+
+# Testing & Development
+pytest==7.4.2
+pytest-cov==4.1.0
+black==23.10.0
+pylint==2.17.5
+
+# Utilities
+tqdm==4.66.1
+pydantic==2.4.2
+requests==2.31.0
