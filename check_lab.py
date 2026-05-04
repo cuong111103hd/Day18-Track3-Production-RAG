@@ -9,6 +9,9 @@ import json
 import os
 import sys
 import subprocess
+import re
+
+from config import SRC_DIR, TESTS_DIR, RAGAS_REPORT_PATH, NAIVE_REPORT_PATH
 
 
 def check_file(path: str, required: bool = True) -> bool:
@@ -41,7 +44,7 @@ def check_json(path: str, required_keys: list[str]) -> bool:
 def check_todos() -> int:
     """Count remaining TODO markers in src/."""
     count = 0
-    for root, _, files in os.walk("src"):
+    for root, _, files in os.walk(SRC_DIR):
         for f in files:
             if f.endswith(".py"):
                 with open(os.path.join(root, f), encoding="utf-8") as fh:
@@ -55,20 +58,37 @@ def run_tests() -> tuple[int, int]:
     """Run pytest and return (passed, total)."""
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", "tests/", "-v", "--tb=no", "-q"],
+            [sys.executable, "-m", "pytest", TESTS_DIR, "-v", "--tb=no", "-q"],
             capture_output=True, text=True, timeout=120,
         )
-        lines = result.stdout.strip().split("\n")
-        summary = lines[-1] if lines else ""
-        # Parse "X passed, Y failed" or "X passed"
-        passed = total = 0
-        for part in summary.split(","):
-            part = part.strip()
-            if "passed" in part:
-                passed = int(part.split()[0])
-                total += passed
-            if "failed" in part:
-                total += int(part.split()[0])
+        output = "\n".join([result.stdout, result.stderr])
+        passed = failed = skipped = xfailed = xpassed = 0
+
+        patterns = {
+            "passed": r"(\d+)\s+passed",
+            "failed": r"(\d+)\s+failed",
+            "skipped": r"(\d+)\s+skipped",
+            "xfailed": r"(\d+)\s+xfailed",
+            "xpassed": r"(\d+)\s+xpassed",
+        }
+        for key, pattern in patterns.items():
+            match = re.search(pattern, output)
+            if match:
+                value = int(match.group(1))
+                if key == "passed":
+                    passed = value
+                elif key == "failed":
+                    failed = value
+                elif key == "skipped":
+                    skipped = value
+                elif key == "xfailed":
+                    xfailed = value
+                elif key == "xpassed":
+                    xpassed = value
+
+        total = passed + failed + skipped + xfailed + xpassed
+        if total == 0 and result.returncode != 0:
+            raise RuntimeError("pytest did not produce a parseable summary")
         return passed, total
     except Exception as e:
         print(f"  ⚠️  pytest error: {e}")
@@ -88,12 +108,12 @@ def validate():
 
     # 2. Reports
     print("\n📊 Reports:")
-    if check_file("reports/ragas_report.json"):
-        if not check_json("reports/ragas_report.json", ["aggregate", "num_questions"]):
+    if check_file(RAGAS_REPORT_PATH):
+        if not check_json(RAGAS_REPORT_PATH, ["aggregate", "num_questions"]):
             errors += 1
     else:
         errors += 1
-    check_file("reports/naive_baseline_report.json", required=False)
+    check_file(NAIVE_REPORT_PATH, required=False)
 
     # 3. Analysis
     print("\n📝 Analysis:")
