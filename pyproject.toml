@@ -1,0 +1,33 @@
+[project]
+name = "lab18-production-rag"
+version = "0.1.0"
+description = "Lab 18: Production RAG Pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "numpy>=1.24.3",
+    "pandas>=2.0.3",
+    "sentence-transformers>=2.2.2",
+    "transformers>=4.35.2",
+    "torch>=2.0.1",
+    "underthesea>=6.9.5",
+    "rank-bm25>=0.2.2",
+    "FlagEmbedding>=1.2.11",
+    "qdrant-client>=1.7.0",
+    "openai>=1.11.0",
+    "ragas>=0.1.7",
+    "datasets>=2.14.6",
+    "cohere>=4.46",
+    "tqdm>=4.66.1",
+    "pydantic>=2.4.2",
+    "requests>=2.31.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.2",
+    "pytest-cov>=4.1.0",
+    "black>=23.10.0",
+    "pylint>=2.17.5",
+]
