@@ -12,16 +12,16 @@
   {
     "question": "Thuế GTGT còn được khấu trừ kỳ trước chuyển sang là bao nhiêu?",
     "ground_truth": "77.377.803",
-    "context_search": "Thuế giá trị gia tăng còn được khấu trừ kỳ trước chuyển sang | [22] | 77.377.803"
+    "context_search": "77.377.803"
   },
   {
     "question": "Dữ liệu cá nhân nhạy cảm bao gồm những loại thông tin nào?",
     "ground_truth": "Quan điểm chính trị, tôn giáo, tình trạng sức khỏe, đặc điểm di truyền, sinh học, đời sống tình dục, vị trí, dữ liệu tội phạm...",
-    "context_search": "Dữ liệu cá nhân nhạy cảm là dữ liệu cá nhân gắn liền với quyền riêng tư... Quan điểm chính trị, quan điểm tôn giáo..."
+    "context_search": "Dữ liệu cá nhân nhạy cảm là dữ liệu cá nhân gắn liền với quyền riêng tư của cá nhân"
   },
   {
     "question": "Chủ thể dữ liệu có quyền gì đối với việc xử lý dữ liệu cá nhân?",
     "ground_truth": "Quyền được biết, đồng ý, truy cập, rút lại sự đồng ý, xóa dữ liệu, hạn chế xử lý, cung cấp dữ liệu, phản đối xử lý, khiếu nại, bồi thường...",
-    "context_search": "Điều 9. Quyền của chủ thể dữ liệu... Quyền được biết... Quyền đồng ý... Quyền truy cập..."
+    "context_search": "Điều 9. Quyền của chủ thể dữ liệu"
   }
 ]
