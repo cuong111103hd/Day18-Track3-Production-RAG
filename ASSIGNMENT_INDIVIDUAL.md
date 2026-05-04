@@ -85,14 +85,14 @@ Integrate cross-encoder reranker, benchmark latency:
 
 | Component | Class/Hàm | Mô tả |
 |-----------|-----------|-------|
-| Cross-encoder | `CrossEncoderReranker.rerank()` | bge-reranker-v2-m3 |
-| Flashrank | `FlashrankReranker.rerank()` | Lightweight alternative |
+| Cross-encoder | `CrossEncoderReranker.rerank()` | Gọi Cohere API (`rerank-multilingual-v3.0`) |
+| Flashrank | `FlashrankReranker.rerank()` | Lightweight alternative (Optional) |
 | Benchmark | `benchmark_reranker()` | Đo avg/min/max latency |
 
 ### TODO trong code
 ```python
-# TODO 1: CrossEncoderReranker._load_model() — load FlagReranker hoặc CrossEncoder
-# TODO 2: CrossEncoderReranker.rerank() — predict scores → sort → top-k
+# TODO 1: CrossEncoderReranker._load_model() — Khởi tạo cohere.Client bằng COHERE_API_KEY
+# TODO 2: CrossEncoderReranker.rerank() — client.rerank() → sort → top-k
 # TODO 3: FlashrankReranker (optional) — Ranker().rerank()
 # TODO 4: benchmark_reranker() — time.perf_counter() × n_runs → stats
 ```
@@ -143,7 +143,7 @@ RAGAS evaluation pipeline + failure analysis:
 |----------|------|
 | Module implementation đúng logic | 15 |
 | `pytest tests/test_m*.py` pass | 15 |
-| Vietnamese-specific handling (segment, bge-m3, ...) | 10 |
+| Vietnamese-specific handling (segment, Cohere API, ...) | 10 |
 | Code quality: comments, type hints, clean | 10 |
 | Tất cả TODO markers hoàn thành | 10 |
 | **Tổng cá nhân** | **60** |

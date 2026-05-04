@@ -55,12 +55,30 @@ So sánh với naive baseline (đã chạy ở đầu lab):
 
 ### Bước 4: Failure Analysis (5 phút)
 
-1. Mở `ragas_report.json` → tìm bottom-5 questions (scores thấp nhất)
-2. Cho mỗi question, đi qua **Error Tree**:
-   - Output đúng? → Không
-   - Context đúng? → Có/Không → Fix G hoặc Fix R/A
-   - Query rewrite OK? → Có/Không → Fix R/A hoặc Fix PreRAG
-3. Điền vào `templates/failure_analysis.md`
+1. Mở `reports/ragas_report.json` hoặc xem kết quả từ `unified_benchmark.py`.
+2. Phân tích 5 câu hỏi có kết quả tệ nhất dựa trên **Error Tree**.
+3. Điền vào báo cáo tiếng Việt bên dưới.
+
+---
+
+## Báo cáo Benchmark Hệ thống RAG (Nhóm)
+
+### 1. Kết quả Unified Retrieval Benchmark
+Bảng so sánh tác động của việc cải tiến các Module 1, 2, 3:
+
+| Cấu hình (Configuration) | Hit@3 | Hit@5 | Latency (ms) |
+| :--- | :--- | :--- | :--- |
+| Baseline (Basic + BM25) | | | |
+| Step 1 (Advanced Chunking) | | | |
+| Step 2 (+ Hybrid Search) | | | |
+| Step 3 (+ Reranking) | | | |
+
+### 2. Phân tích lỗi (Failure Analysis)
+Dựa trên kết quả Benchmark, chúng tôi xác định các vấn đề chính:
+*   **Vấn đề 1**: ...
+*   **Vấn đề 2**: ...
+*   **Nguyên nhân gốc rễ**: ...
+*   **Giải pháp đề xuất**: ...
 
 ### Bước 5: Presentation (5 phút/nhóm)
 

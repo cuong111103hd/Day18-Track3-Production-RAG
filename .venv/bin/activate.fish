@@ -79,7 +79,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV '/Users/AI/Vinuni/Day18-Track3-Production-RAG/.venv'
+set -gx VIRTUAL_ENV '/home/cuong/Desktop/python/VinUni/D18/Day18-Track3-Production-RAG/.venv'
 
 # https://github.com/fish-shell/fish-shell/issues/436 altered PATH handling
 if test (string sub -s 1 -l 1 $FISH_VERSION) -lt 3
@@ -91,8 +91,8 @@ set -gx PATH "$VIRTUAL_ENV"'/bin' $PATH
 
 # Prompt override provided?
 # If not, just use the environment name.
-if test -n 'lab18-production-rag'
-    set -gx VIRTUAL_ENV_PROMPT 'lab18-production-rag'
+if test -n 'day18-track3-production-rag'
+    set -gx VIRTUAL_ENV_PROMPT 'day18-track3-production-rag'
 else
     set -gx VIRTUAL_ENV_PROMPT (basename "$VIRTUAL_ENV")
 end
